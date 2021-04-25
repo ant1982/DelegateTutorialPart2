@@ -8,6 +8,18 @@
 void UParentWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
+
+	UWorld* World = GetWorld();
+
+	if (World != nullptr)
+	{
+		ATestGameMode* TestGameMode = Cast<ATestGameMode>(World->GetAuthGameMode());
+
+		if (TestGameMode)
+		{
+			TestGameMode->OnScoreUpdated.AddUObject(this, &UParentWidget::SetDataValueDelegate);
+		}
+	}
 }
 
 bool UParentWidget::Initialize()
@@ -18,48 +30,54 @@ bool UParentWidget::Initialize()
 
 	if (ScoreText)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Score text found"));
+		ScoreText->SetText(FText::FromString("Score Text has been initialised"));
+	}
 
+	return true;
+}
+
+void UParentWidget::SetDataValueDelegate()
+{
+	UE_LOG(LogTemp, Warning, TEXT("The Score has been updated"));
+
+	if (ScoreText)
+	{
 		UWorld* World = GetWorld();
 
 		if (World != nullptr)
 		{
 			ATestGameMode* TestGameMode = Cast<ATestGameMode>(World->GetAuthGameMode());
 
-			if (TestGameMode) 
+			FString dataString = TEXT("The Score value is: ");
+
+			if (TestGameMode)
 			{
-				UE_LOG(LogTemp, Warning, TEXT("Game mode found"));
+				dataString.AppendInt(TestGameMode->GetScorePoints());
 
-				ScoreText->SetText(FText::FromString("Game mode set"));
-
-				ScoreText->TextDelegate.BindUFunction(this, "SetScoreField");
-
-
+				ScoreText->SetText(FText::FromString(dataString));
 			}
 		}
 	}
-
-	return true;
 }
 
-FText UParentWidget::SetScoreField()
-{
-	UWorld* World = GetWorld();
-
-	if (World != nullptr)
-	{
-		ATestGameMode* TestGameMode = Cast<ATestGameMode>(World->GetAuthGameMode());
-
-		if (TestGameMode)
-		{			
-			return FText::FromString(FString::FromInt(TestGameMode->GetScorePoints()));
-		}
-
-		else
-		{
-			return FText::FromString("NULL");
-		}
-	}
-
-	return FText::FromString("NULL");
-}
+//FText UParentWidget::SetScoreField()
+//{
+//	UWorld* World = GetWorld();
+//
+//	if (World != nullptr)
+//	{
+//		ATestGameMode* TestGameMode = Cast<ATestGameMode>(World->GetAuthGameMode());
+//
+//		if (TestGameMode)
+//		{	
+//			return FText::FromString(FString::FromInt(TestGameMode->GetScorePoints()));
+//		}
+//
+//		else
+//		{
+//			return FText::FromString("NULL");
+//		}
+//	}
+//
+//	return FText::FromString("NULL");
+//}

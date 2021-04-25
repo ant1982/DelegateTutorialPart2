@@ -28,8 +28,11 @@ private:
 	UPROPERTY(meta = (BindWidget))
 		class UTextBlock* ScoreText;
 
+	//UFUNCTION()
+	//	FText SetScoreField();
+
 	UFUNCTION()
-		FText SetScoreField();
+		void SetDataValueDelegate();
 
 
 };

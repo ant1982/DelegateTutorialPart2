@@ -6,6 +6,8 @@
 #include "GameFramework/GameModeBase.h"
 #include "TestGameMode.generated.h"
 
+DECLARE_MULTICAST_DELEGATE(ScoreUpdateDelegate);
+
 /**
  * 
  */
@@ -23,6 +25,13 @@ public:
 
 	UFUNCTION()
 		int32 GetScorePoints();
+
+	ScoreUpdateDelegate OnScoreUpdated;
+
+protected:
+
+	UFUNCTION()
+		void ScoreUpdated();
 
 private:
 

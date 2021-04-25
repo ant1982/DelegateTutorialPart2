@@ -12,6 +12,7 @@ void ATestGameMode::SetScorePoints(int32 value)
 {
 	Score += value;
 	UE_LOG(LogTemp, Warning, TEXT("Score: %d"),Score);
+	ScoreUpdated();
 }
 
 int32 ATestGameMode::GetScorePoints()
@@ -19,3 +20,7 @@ int32 ATestGameMode::GetScorePoints()
 	return Score;
 }
 
+void ATestGameMode::ScoreUpdated()
+{
+	OnScoreUpdated.Broadcast();
+}
